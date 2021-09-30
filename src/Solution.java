@@ -99,21 +99,25 @@ public class Solution {
         if (n < 0) {
             return -1;
         }
-        if (n <= 1) {
-            return n;
+        if (n == 1 || n == 2) {
+            return 1;
         }
-        if (fibonacci(n) < 0) {
-            return Long.MAX_VALUE;
-        }
-        long first = 0, second = 1, i = 2, res = 0;
+        long a = 0;
+        long b = 1;
+        long i = 2;
+        long res = 0;
         while (i <= n) {
-            res = first + second;
-            first = second;
-            second = res;
+            res = a + b;
+            a = b;
+            b = res;
             i++;
+        }
+        if (res < 0) {
+            return Long.MAX_VALUE;
         }
         return res;
     }
+
 
     /**
      * GCD.
