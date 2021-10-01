@@ -13,8 +13,14 @@ public class Solution {
      * Comments.
      */
     public Solution(int numerator, int denominator) {
-        this.numerator = numerator;
-        this.denominator = denominator;
+        if (denominator == 0) {
+            this.numerator = 0;
+            this.denominator = 1;
+        } else {
+            this.numerator = numerator;
+            this.denominator = denominator;
+        }
+
     }
 
     public int getNumerator() {
@@ -29,7 +35,13 @@ public class Solution {
         return denominator;
     }
 
+    /**
+     * Set denominator is different 0.
+     */
     public void setDenominator(int denominator) {
+        if (denominator == 0) {
+            return;
+        }
         this.denominator = denominator;
     }
 
@@ -37,28 +49,29 @@ public class Solution {
      * Comments.
      */
     public Solution reduce() {
+        Solution newSolution = new Solution();
         int x = gcd(this.numerator, this.denominator);
-        this.setNumerator(this.numerator / x);
-        this.setDenominator(this.denominator / x);
-        return this;
+        newSolution.numerator = this.numerator / x;
+        newSolution.denominator = this.denominator / x;
+        return newSolution;
     }
 
     /**
      * Comments.
      */
     public Solution add(Solution other) {
-        this.setNumerator(this.getNumerator() * other.getDenominator() + this.getDenominator() * other.getNumerator());
+        this.setNumerator(this.numerator * other.denominator + this.denominator * other.numerator);
         this.setDenominator(this.getDenominator() * other.getDenominator());
-        reduce();
+        return this.reduce();
     }
 
     /**
      * Comments.
      */
     public Solution subtract(Solution other) {
-        this.setNumerator(this.getNumerator() * other.getDenominator() - this.getDenominator() * other.getNumerator());
+        this.setNumerator(this.numerator * other.denominator - this.denominator * other.numerator);
         this.setDenominator(this.getDenominator() * other.getDenominator());
-        reduce();
+        return this.reduce();
     }
 
     /**
@@ -67,16 +80,19 @@ public class Solution {
     public Solution multiply(Solution other) {
         this.setNumerator(this.getNumerator() * other.getNumerator());
         this.setDenominator(this.getDenominator() * other.getDenominator());
-        reduce();
+        return this.reduce();
     }
 
     /**
      * Comments.
      */
     public Solution divide(Solution other) {
+        if (other.denominator == 0) {
+            return this;
+        }
         this.setNumerator(this.getNumerator() * other.getDenominator());
         this.setDenominator(this.getDenominator() * other.getNumerator());
-        reduce();
+        return this.reduce();
     }
 
     /**
@@ -85,9 +101,7 @@ public class Solution {
     public boolean equals(Object obj) {
         if (obj instanceof Solution) {
             Solution other = (Solution) obj;
-            if (this.getNumerator() * other.getDenominator() - this.getDenominator() * other.getNumerator() == 0) {
-                return true;
-            }
+            return this.numerator * other.denominator - this.denominator * other.numerator == 0;
         }
         return false;
     }
